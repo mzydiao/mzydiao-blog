@@ -12,6 +12,7 @@ website:
         href: about.qmd
       - text: "Blog"
         href: index.qmd
+  google-analytics: G-Y9Q6Z3H9NW
 format:
   html:
     html-math-method: katex
