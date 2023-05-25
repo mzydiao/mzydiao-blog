@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Michael Diao">
+<meta name="dcterms.date" content="2023-05-25">
+<meta name="description" content="We motivate score matching as an alternative to maximum likelihood estimation, and consider its advantages and shortcomings.">
+
+<title>Michael Diao’s Blog - Challenges of Score Matching</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Michael Diao’s Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Challenges of Score Matching</h1>
+                  <div>
+        <div class="description">
+          We motivate <em>score matching</em> as an alternative to maximum likelihood estimation, and consider its advantages and shortcomings.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">math</div>
+                <div class="quarto-category">statistics</div>
+                <div class="quarto-category">machine learning</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Michael Diao </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 25, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  <div>
+    <div class="abstract">
+      <div class="abstract-title">Abstract</div>
+      In this post, we consider the statistical problem of <em>score matching</em>. We motivate its usage as an alternative to maximum likelihood estimation, and consider its advantages and shortcomings. We make this connection concrete by proving that for a well-separated mixture of Gaussians in one dimension, score matching is statistically inefficient compared to maximum likelihood. To our knowledge, this result is new and provides a conceptually simpler example of the statistical inefficiency of score matching than what is shown in the literature, particularly in <span class="citation" data-cites="koehler2022statistical">Koehler, Heckett, and Risteski (<a href="#ref-koehler2022statistical" role="doc-biblioref">2022</a>)</span>.
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#maximum-likelihood-estimation" id="toc-maximum-likelihood-estimation" class="nav-link" data-scroll-target="#maximum-likelihood-estimation">Maximum likelihood estimation</a></li>
+  <li><a href="#score-matching" id="toc-score-matching" class="nav-link" data-scroll-target="#score-matching">Score matching</a></li>
+  </ul></li>
+  <li><a href="#inefficiency-for-mixtures-of-gaussians" id="toc-inefficiency-for-mixtures-of-gaussians" class="nav-link" data-scroll-target="#inefficiency-for-mixtures-of-gaussians">Inefficiency for Mixtures of Gaussians</a>
+  <ul class="collapse">
+  <li><a href="#inefficiency-of-score-matching" id="toc-inefficiency-of-score-matching" class="nav-link" data-scroll-target="#inefficiency-of-score-matching">Inefficiency of score matching</a>
+  <ul class="collapse">
+  <li><a href="#visualizing-score-function-for-varying-p" id="toc-visualizing-score-function-for-varying-p" class="nav-link" data-scroll-target="#visualizing-score-function-for-varying-p">Visualizing score function for varying <span class="math inline">p</span></a></li>
+  </ul></li>
+  <li><a href="#proof" id="toc-proof" class="nav-link" data-scroll-target="#proof">Proof</a></li>
+  </ul></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a>
+  <ul class="collapse">
+  <li><a href="#sec-derivatives" id="toc-sec-derivatives" class="nav-link" data-scroll-target="#sec-derivatives">Computation of score function derivatives</a>
+  <ul class="collapse">
+  <li><a href="#general-case" id="toc-general-case" class="nav-link" data-scroll-target="#general-case">General case</a></li>
+  <li><a href="#special-case-p-frac12" id="toc-special-case-p-frac12" class="nav-link" data-scroll-target="#special-case-p-frac12">Special case <span class="math inline">p = \frac{1}{2}</span></a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Modern day models are incredibly rich and expressive, powering contemporary advances in machine learning and statistical inference. The idea of modelling is that we are given some data <span class="math inline">X_1, \ldots, X_n \in \mathcal X</span> and want to get a handle on the underlying distribution that generates the data. To do this, one approach is <em>parametric inference</em>: we take a family of distributions <span class="math inline">\mathcal Q= \left\{ q_{\theta} \colon \theta \in \Theta \right\}</span> indexed by a parameter <span class="math inline">\theta \in \Theta</span>. We assume for simplicity that <span class="math inline">X_1, \ldots, X_n</span> are drawn i.i.d. from <span class="math inline">q_{\theta^\star}</span> for some true parameter <span class="math inline">\theta^\star</span> where <span class="math inline">\theta^\star \in \Theta</span>. Based on our data, we seek to produce an estimate <span class="math inline">\hat \theta</span> of the true parameter <span class="math inline">\theta^\star</span>.</p>
+<section id="maximum-likelihood-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="maximum-likelihood-estimation">Maximum likelihood estimation</h2>
+<p>One such estimate is the <em>maximum likelihood estimate</em> (MLE), which is the element of <span class="math inline">\Theta</span> that maximizes the likelihood (or equivalently log-likelihood) of the data: <span class="math display">\begin{aligned}
+    \hat \theta_{\text{MLE}}
+    \overset{\mathrm{def}}{=}\mathop{\mathrm{arg max}}_{\theta \in \Theta} \prod_{i=1}^{n} q_\theta(X_i)
+    = \mathop{\mathrm{arg max}}_{\theta \in \Theta} \frac{1}{n} \sum_{i=1}^{n} \underbrace{\log q_\theta(X_i)}_{\overset{\mathrm{def}}{=}\ell(\theta; X_i)}.
+\end{aligned}</span> As <span class="math inline">n \to \infty</span>, by the Law of Large Numbers, we have that <span class="math display">\begin{aligned}
+    \frac{1}{n} \sum_{i=1}^{n} \ell(\theta; X_i) \overset{\mathbb P}{\to} \mathbb E[\ell(\theta; X_1)] = \mathbb E[\log q_\theta(X_1)].
+\end{aligned}</span> On the other hand, we have that <span class="math display">\begin{aligned}
+    \mathbb E[\log q_{\theta^\star}(X_1)] -
+    \mathbb E[\log q_{\theta}(X_1)]
+    =
+    \mathbb E\left[ \log \frac{q_{\theta^\star}}{q_{\theta}}(X_1) \right]
+    =
+    \mathsf{KL}\left(q_{\theta^\star} \,\Vert\, q_{\theta}\right),
+\end{aligned}</span> where <span class="math inline">\mathsf{KL}\left(p \,\Vert\, q\right)</span> denotes the KL divergence between distributions <span class="math inline">p</span> and <span class="math inline">q</span>. The KL divergence between two distinct distributions is positive, meaning that for any <span class="math inline">\theta, \theta^\star</span> for which <span class="math inline">q_\theta \neq q_{\theta^\star}</span>, we have <span class="math inline">\mathsf{KL}\left(q_{\theta^\star} \,\Vert\, q_\theta\right) &gt; 0</span>. So as <span class="math inline">n \to \infty</span>, the MLE <span class="math inline">\hat \theta_{\text{MLE}}</span> will converge in probability to the true parameter <span class="math inline">\theta^\star</span>: in other words, the MLE is a <em>consistent estimator</em>. Furthermore, the MLE is <em>asymptotically efficient</em>: that is, no other estimator attains a strictly lower variance than the MLE as <span class="math inline">n \to \infty</span>.</p>
+<p>However, the richness of models comes at a cost. Often, the parameterized distribution <span class="math inline">q_\theta</span> can only be specified up to a constant of proportionality. For instance, we might specify that <span class="math inline">q_\theta(x) \propto \exp(-V_\theta(x))</span> for some log-potential function <span class="math inline">V_\theta \colon \mathcal X\to \mathbb R</span>. Since <span class="math inline">q_{\theta}</span> is a probability distribution, it must sum to 1, meaning that we have <span class="math display">\begin{aligned}
+    q_{\theta} = \frac{\exp(-V_\theta(x))}{Z(\theta)},  \qquad \text{where} \; Z(\theta) \overset{\mathrm{def}}{=}\int_{\mathcal X} \exp(-V_{\theta}(x'))\,\mathrm{d}{x'}.
+\end{aligned}</span> The issue is that for each value of <span class="math inline">\theta</span>, there is a different <em>normalization constant</em> <span class="math inline">Z(\theta)</span>, and computing even a single normalization constant is generally intractable when the data space <span class="math inline">\mathcal X</span> is large. Computing the MLE falls victim to this issue: if we cannot compute <span class="math inline">Z(\theta)</span>, then there is no hope of computing <span class="math inline">\hat \theta_{\text{MLE}}</span> because the objective function depends on the value of <span class="math inline">Z(\theta)</span>.</p>
+</section>
+<section id="score-matching" class="level2">
+<h2 class="anchored" data-anchor-id="score-matching">Score matching</h2>
+<p>The <em>score matching estimator</em> (SME), introduced by <span class="citation" data-cites="hyvarinen05a">Hyvärinen (<a href="#ref-hyvarinen05a" role="doc-biblioref">2005</a>)</span>, promises to solve this issue. The SME is defined by <span class="math display">\begin{aligned}
+    \hat \theta _{\text{SME}}
+    \overset{\mathrm{def}}{=}\mathop{\mathrm{arg min}}_{\theta \in \Theta} \frac{1}{n} \sum_{i=1}^{n}
+    \biggl[
+    \underbrace{
+      \mathop{\mathrm{Tr}}(\nabla^2 \log q_\theta (X_i)) + \frac{1}{2}\left\lVert \nabla \log q_\theta(X_i) \right\rVert^2
+    }_{\overset{\mathrm{def}}{=}\varphi (\theta; X_i)}
+    \biggr].
+\end{aligned}</span> The quantity <span class="math inline">\nabla \log q_\theta</span> is known as the <em>score function</em> of <span class="math inline">q_\theta</span>. Since the gradient is taken with respect to <span class="math inline">x</span> rather than <span class="math inline">\theta</span>, the normalization constant vanishes altogether from the objective function: hence, the score matching estimator indeed evades the need to normalize, giving it one computational advantage over the MLE.</p>
+<p>Now the question is: is this estimator any good? How do its statistical properties compare to the MLE?</p>
+<p>As a first consideration, the SME is indeed a consistent estimator, just like the MLE. Indeed, we have that by the Law of Large Numbers, <span class="math display">\begin{aligned}
+    \frac{1}{n} \sum_{i=1}^{n}
+    \rho(\theta; X_i)
+    &amp;=
+    \frac{1}{n} \sum_{i=1}^{n}
+    \left[
+    \mathop{\mathrm{Tr}}(\nabla^2 \log q_\theta (X_i)) + \frac{1}{2}\left\lVert \nabla \log q_\theta(X_i) \right\rVert^2
+    \right]
+    \\
+    &amp;\overset{\mathbb P}{\to}
+    \mathbb E
+    \left[ \mathop{\mathrm{Tr}}(\nabla^2 \log q_\theta (X_1)) + \frac{1}{2}\left\lVert \nabla \log q_\theta(X_1) \right\rVert^2 \right]
+    \\
+    &amp;=
+    \frac{1}{2}\Bigl(\underbrace{
+    \mathbb E\left\lVert \nabla \log \frac{q_{\theta^\star}}{q_\theta}(X_1) \right\rVert^2
+    }_{= \mathsf{FI}\left(q_{\theta^\star} \,\Vert\, q_\theta\right)}
+    -
+    \mathbb E\left\lVert \nabla \log q_{\theta^\star}(X_1) \right\rVert^2
+    \Bigr)
+    ,
+\end{aligned}</span> where the last equality follows by integration by parts. The first term on the last line is the <em>relative Fisher information</em> (FI) between <span class="math inline">q_{\theta^\star}</span> and <span class="math inline">q_{\theta}</span>, and is nonnegative with equality iff <span class="math inline">q_{\theta^\star} = q_\theta</span>. Hence, asymptotically <span class="math inline">\theta^\star</span> attains minimality of the objective, meaning that <span class="math inline">\hat \theta_{\text{SME}}</span> is indeed consistent.</p>
+<p>The story thus far looks good. Not only does the SME relieve the computational burden of evaluating the normalization constant, but it also provides a consistent estimator. Might it be the case that we can <em>always</em> just use the SME instead of the MLE?</p>
+<p>Unfortunately, we must dash our hopes. The core idea of score matching is that if the score functions <span class="math inline">\nabla \log q_{\theta^\star}</span> and <span class="math inline">\nabla \log q_{\theta}</span> match exactly, then the distributions <span class="math inline">q_{\theta^\star}</span> and <span class="math inline">q_{\theta}</span> must match as well. However, there is a key issue. The score function, being a gradient, is fundamentally a measure of <em>local</em> information about the change in the log-likelihood function. Meanwhile, it is possible for two very different distributions to have extremely similar log-likelihood functions (up to a constant shift) outside of a set of very small measure. Until enough samples land in that distinguishing set, score matching cannot discern the difference between these two distributions.</p>
+<p>This is the key intuition behind the <em>statistical inefficiency</em> of score matching: when <span class="math inline">\left\{ q_{\theta} \right\}</span> is a family of distributions exhibiting the aforementioned behavior — having similar score functions outside a set of negligible measure — the SME can have extremely high variance compared with the MLE. As it turns out, this behavior is deeply related to the maximal <em>log-Sobolev constant</em> among distributions in <span class="math inline">\left\{ q_\theta \right\}</span>; see the work of <span class="citation" data-cites="koehler2022statistical">Koehler, Heckett, and Risteski (<a href="#ref-koehler2022statistical" role="doc-biblioref">2022</a>)</span> for a discussion.</p>
+<p>In the sequel, we will make our intuitive argument concrete by demonstrating that score matching is indeed statistically inefficient on a simple example of <em>mixtures of well-separated Gaussians</em> — a prototypical example of a distribution with large log-Sobolev constant.</p>
+</section>
+</section>
+<section id="inefficiency-for-mixtures-of-gaussians" class="level1">
+<h1>Inefficiency for Mixtures of Gaussians</h1>
+<p>Let <span class="math inline">m &gt; 0</span> be a mean parameter and <span class="math inline">p \in [0, 1]</span> be a weight parameter. Define the Gaussian measures <span class="math inline">\mu_+ = \mathcal N(m, 1)</span> and <span class="math inline">\mu_- = \mathcal N(-m, 1)</span>, and let <span class="math inline">\mu_p</span> be the Gaussian mixture distribution defined by <span class="math inline">\mu_p = p \mu_+ + (1 - p) \mu_-</span>. Then the score matching estimator <span class="math inline">\hat p_{\text{SME}}</span> for <span class="math inline">p</span> based on samples <span class="math inline">X_1, \ldots, X_n \overset{\mathrm{i.i.d.}}\sim\mu_p</span> is given by: <span class="math display">\begin{aligned}
+    \hat p_{\text{SME}}
+    = \mathop{\mathrm{arg min}}_{p \in [0, 1]}
+    \frac{1}{n}
+    \sum_{i=1}^{n}
+    \bigl[
+    \nabla^2 \log \mu_p (X_i) + \frac{1}{2}(\nabla \log \mu_p (X_i))^2
+    \bigr].
+\end{aligned}</span> On the other hand, the MLE is given by <span class="math display">\begin{aligned}
+    \hat p_{\text{MLE}}
+    = \mathop{\mathrm{arg min}}_{p \in [0, 1]}
+    \frac{1}{n}
+    \sum_{i=1}^{n}
+    \log \mu_p (X_i) .
+\end{aligned}</span></p>
+<section id="inefficiency-of-score-matching" class="level2">
+<h2 class="anchored" data-anchor-id="inefficiency-of-score-matching">Inefficiency of score matching</h2>
+<p>The following theorem shows that the SME is statistically inefficient compared to the MLE for learning the parameter <span class="math inline">p</span>:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<div id="thm-inefficiency" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1 (Inefficiency of score matching) </strong></span>Suppose that <span class="math inline">p^\star = \frac{1}{2}</span> and that <span class="math inline">X \sim \mu_{p^\star}</span>. Then as <span class="math inline">n \to \infty</span>, we have that <span class="math display">\begin{aligned}
+        {\sqrt{n}} (\hat p_{\text{SME}} - p^\star) \overset{\text{D}}{\to} \mathcal N(0, \sigma^2_{\text{SME}}(m)),
+\end{aligned}</span> where <span class="math inline">\sigma^2_{\text{SME}}(m) \in \Omega(m^2 e^{-\frac{1}{2}m^2})</span>. On the other hand, <span class="math display">\begin{aligned}
+        {\sqrt{n}} (\hat p_{\text{MLE}} - p^\star) \overset{\text{D}}{\to} \mathcal N\left( 0, \sigma^2_{\text{MLE}}(m) \right),
+\end{aligned}</span> where <span class="math inline">\sigma^2_{\text{MLE}}(m) \in O(1)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Hence, this example of learning the weight parameter of a mixture of one-dimensional standard Gaussians demonstrates an <em>extreme gap</em> in the statistical efficiency of the SME versus the MLE: the standardized asymptotic variance of the SME grows as <span class="math inline">e^{\frac{1}{2}m^2}</span> whereas that of the MLE does not grow at all (in fact, shrinks)! The idea is that the MLE learns the weight parameter very easily by simply looking at the proportion of samples landing in the positive real axis versus the negative real axis, and high separation only makes this learning task easier. On the other hand, the SME suffers from the issue we posited earlier: the score functions <span class="math inline">\nabla \log \mu_p</span> basically do not differ at all except on a small interval around 0, and the measure of this set is extremely small, on the order of <span class="math inline">e^{-\frac{1}{2}m^2}</span>.</p>
+<p>In <a href="#sec-derivatives">Section&nbsp;3.1</a>, we compute the score function <span class="math inline">\nabla \log \mu_p</span> as well as its partial derivatives with respect to <span class="math inline">p</span>. Using these formulas, we can obtain our desired bounds. On the other hand, before diving into the proof, we first provide an illustration in <a href="#fig-score">Figure&nbsp;1</a> that confirms our above intuition.</p>
+<section id="visualizing-score-function-for-varying-p" class="level3">
+<h3 class="anchored" data-anchor-id="visualizing-score-function-for-varying-p">Visualizing score function for varying <span class="math inline">p</span></h3>
+<p>We plot the score functions <span class="math inline">\nabla \log \mu_p (x)</span> with <span class="math inline">m = 4.5</span> for <span class="math inline">p \in \{0.1, 0.5, 0.9\}</span>, superimposing the mixture PDF to visually demonstrate that the score functions only vary significantly on a set of negligible measure.</p>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gaussian_pdf(x, mean, sigma):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="dv">1</span> <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(<span class="dv">2</span> <span class="op">*</span> np.pi)) <span class="op">*</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      np.exp(<span class="op">-</span>(x <span class="op">-</span> mean) <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> sigma <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mixture_pdf(x, mean, sigma, p):</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mixture with weights p</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    mu_plus <span class="op">=</span> gaussian_pdf(x, mean, sigma)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    mu_minus <span class="op">=</span> gaussian_pdf(x, <span class="op">-</span>mean, sigma)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (p <span class="op">*</span> mu_plus <span class="op">+</span> (<span class="dv">1</span><span class="op">-</span>p) <span class="op">*</span> mu_minus)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> score_function(x, mean, sigma, p):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    mu_plus <span class="op">=</span> gaussian_pdf(x, mean, sigma)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    mu_minus <span class="op">=</span> gaussian_pdf(x, <span class="op">-</span>mean, sigma)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> p <span class="op">*</span> mu_plus <span class="op">*</span> (<span class="op">-</span> x <span class="op">+</span> mean) <span class="op">/</span> (sigma <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    neg <span class="op">=</span> (<span class="dv">1</span><span class="op">-</span>p) <span class="op">*</span> mu_minus <span class="op">*</span> (<span class="op">-</span> x <span class="op">-</span> mean) <span class="op">/</span> (sigma <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (pos <span class="op">+</span> neg) <span class="op">/</span> (mixture_pdf(x, mean, sigma, p))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># set the mean and std</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> <span class="fl">4.5</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the weight parameter for the Gaussian mixture</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.5</span>  <span class="co"># Equal weights for the two Gaussians</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the PDF and score function for each x value</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> mixture_pdf(x, mean, sigma, p)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the Gaussian mixture PDF and score function</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>fig, ax1 <span class="op">=</span> plt.subplots()</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>blue <span class="op">=</span> <span class="st">'#4287f5'</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>ax1.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>ax1.plot(x, pdf, blue, label<span class="op">=</span><span class="vs">r'PDF $\mu_</span><span class="sc">{p}</span><span class="vs">(x)$, $p = \frac</span><span class="sc">{1}{2}</span><span class="vs">$'</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="vs">r'$x$'</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">'PDF'</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>ax1.tick_params(axis<span class="op">=</span><span class="st">'y'</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Set symmetric y limits on left</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>y_min, y_max <span class="op">=</span> <span class="op">-</span>np.<span class="bu">max</span>(pdf) <span class="op">*</span> <span class="fl">1.1</span>, np.<span class="bu">max</span>(pdf) <span class="op">*</span> <span class="fl">1.1</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>ax1.set_ylim(y_min, y_max)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot score functions for different values of p</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> ax1.twinx()</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> np.linspace(<span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="dv">3</span>):</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  color <span class="op">=</span> plt.cm.viridis(p)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  scores <span class="op">=</span> score_function(x, mean, sigma, p)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  ax2.plot(x, scores, color<span class="op">=</span>color, label<span class="op">=</span><span class="vs">fr'score $\nabla \,\log \mu_</span><span class="ch">{{</span><span class="vs">p</span><span class="ch">}}</span><span class="vs">(x)$, $p=</span><span class="sc">{</span>p<span class="sc">}</span><span class="vs">$'</span>, )</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">'score'</span>)</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>ax2.tick_params(axis<span class="op">=</span><span class="st">'y'</span>)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Display legend</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> ax1.get_lines() <span class="op">+</span> ax2.get_lines()</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>plt.legend(lines, [line.get_label() <span class="cf">for</span> line <span class="kw">in</span> lines], loc<span class="op">=</span><span class="st">'lower left'</span>)</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Gaussian Mixture PDF and Score Function'</span>)</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-score" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="index_files/figure-html/fig-score-output-1.png" width="656" height="449" class="figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: The score function varies negligibly with <span class="math inline">p</span> outside a set of extremely small measure. Hence, learning <span class="math inline">p</span> via score matching should be extremely sample inefficient.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="proof" class="level2">
+<h2 class="anchored" data-anchor-id="proof">Proof</h2>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (<a href="#thm-inefficiency">Theorem&nbsp;1</a>). </span>Define the <em>risk function</em> <span class="math display">\begin{aligned}
+    \varphi(p; x)
+    &amp;=
+    \nabla^2 \log \mu_p (x) + \frac{1}{2}(\nabla \log \mu_p (x))^2,
+\end{aligned}</span> so that <span class="math display">\begin{aligned}
+    \hat p_{\text{SME}}
+    = \mathop{\mathrm{arg min}}_{p \in [0, 1]}
+    \frac{1}{n}
+    \sum_{i=1}^{n}
+    \varphi(p, X_i)
+    .
+\end{aligned}</span> Furthermore, denote <span class="math display">\begin{aligned}
+    \varphi_n(p) \overset{\mathrm{def}}{=}
+    \frac{1}{n}
+    \sum_{i=1}^{n}
+    \varphi(p, X_i).
+\end{aligned}</span> Now, since the SME is consistent, <span class="math inline">\hat p_{\text{SME}}</span> will be close to <span class="math inline">p^\star</span> as <span class="math inline">n \to \infty</span>. This motivates performing a Taylor expansion of the objective function to obtain that <span class="math display">\begin{aligned}
+    0
+    &amp;=
+    \partial_p \varphi_n (\hat p_{\text{SME}})
+    \approx
+    \partial_p \varphi_n (p^\star)
+    +
+    \partial_p^2 \varphi_n (p^\star) (\hat p_{\text{SME}} - p^\star).
+\end{aligned}</span> Rearranging, we obtain that <span class="math display">\begin{aligned}
+    \sqrt{n}(\hat p_{\text{SME}} - p^\star)
+    \approx \frac{\sqrt{n} \partial_p \varphi_n (p^\star)}{\partial_p^2 \varphi_n (p^\star)}.
+\end{aligned}</span> Let <span class="math inline">X \sim \mu_{p^\star}</span>. As <span class="math inline">n \to \infty</span>, the Central Limit Theorem tells us that <span class="math display">\begin{aligned}
+    \sqrt{n} \partial_p \varphi_n (p^\star)
+    \overset{\text{D}}{\to} \mathcal N(0, \mathop{\mathrm{Var}}\left[ \partial_p \varphi(p; X) \right])
+    = \mathcal N(0, \mathbb E\left[ (\partial_p \varphi(p^\star; X))^2 \right]),
+\end{aligned}</span> where the last equality is due to the fact <span class="math inline">\partial_p \,\big\vert_{p = p^\star}\mathbb E[\varphi(p^\star; X)] = 0</span> due to asymptotic consistency. On the other hand, by the Law of Large Numbers, the denominator converges to <span class="math display">\begin{aligned}
+    \partial_p^2 \varphi_n(p^\star) = \mathbb E\left[ \partial_p^2 \varphi(p^\star; X) \right].
+\end{aligned}</span> Thus, we have that <span class="math display">\begin{aligned}
+    \sqrt{n}(\hat p - p^\star)
+    \overset{\text{D}}{\to}
+    \mathcal N\left( 0,
+    \frac{\mathbb E\left[ \left( \partial_p \varphi(p; X) \right)^2 \right]}{\mathbb E\left[ \partial_p^2 \varphi(p; X) \right]^2}
+    \right).
+\end{aligned}</span> In fact, we can simplify the denominator of the variance expression. We have that <span class="math display">\begin{aligned}
+    \mathbb E\left[ \partial_p^2 \varphi(p; X) \right]
+    &amp;=
+    \int \partial_p^2 \varphi(p; x) \,\mathrm{d}{\mu_p(x)}\\
+    &amp;=
+    -\int \partial_p \varphi(p; x) (\partial_p \mu_p(x))\,\mathrm{d}{x}
+    \\
+    &amp;=
+    -\int \partial_p \varphi(p; x) \left( \frac{\partial_p \mu_p(x)}{\mu_p(x)} \right)\,\mathrm{d}{\mu_p(x)}\\
+    &amp;=
+    -\int (\partial_p \varphi(p; x)) (\partial_p \log \mu_p (x)) \,\mathrm{d}{\mu_p(x)},
+\end{aligned}</span> where the second equality is by integration by parts. Hence, <span class="math display">\begin{aligned}
+    \mathbb E\left[ \partial_p^2 \varphi(p; X) \right]^2
+    &amp;=
+    \mathbb E\left[ \partial_p \varphi(p; X) (\partial_p \log \mu_p (x)) \right]^2.
+\end{aligned}</span></p>
+<p>Computing the partial derivative of the risk function with respect to <span class="math inline">p</span>, we obtain that <span class="math display">\begin{aligned}
+    \partial_p \varphi(p; X)
+    &amp;=
+    \partial_p \nabla^2 \log \mu_p (X)
+    +
+    (\nabla \log \mu_p(X)) (\partial_p \nabla \log \mu_p(X)).
+\end{aligned}</span></p>
+<p>Now, we provide a lower bound on the numerator and an upper bound on the denominator as follows.</p>
+<details>
+<summary>
+<strong>Lower bound on numerator</strong>.
+</summary>
+Using the calculations in <a href="#sec-derivatives">Section&nbsp;3.1</a>, we compute that <span class="math display">\begin{aligned}
+    \left\lvert \partial_p \varphi(p; X) \right\rvert
+    &amp;=
+    \left\lvert
+    \partial_p \nabla^2 \log \mu_p (X)
+    +
+    (\nabla \log \mu_p(X)) (\partial_p \nabla \log \mu_p(X)) \right\rvert
+    \\
+    &amp;=
+    \left\lvert
+    -\frac{16m^2}{(e^{mX} + e^{-mX})^2} \cdot \tanh(mX) + (-X + m \tanh(mX)) \cdot \frac{8m}{(e^{mX} + e^{-mX})^2}
+     \right\rvert
+    \\
+    &amp;=
+    \frac{8m}{(e^{mX} + e^{-mX})^2}
+    \cdot
+    \left\lvert
+    X + m \cdot \tanh(mX)
+     \right\rvert.
+\end{aligned}</span> Consider when <span class="math inline">\left\lvert X \right\rvert \in [\frac{1}{2m}, \frac{1}{m}]</span>. On this interval, we have that <span class="math display">\begin{aligned}
+    \frac{\left\lvert
+    X + m \cdot \tanh(mX)
+     \right\rvert}{(e^{mX} + e^{-mX})^2}
+    &amp;\geq
+    \frac{m \left\lvert \tanh(mX) \right\rvert - \left\lvert
+    X
+     \right\rvert}{(e^{mX} + e^{-mX})^2}
+    \\
+    &amp;\geq
+    \frac{m \tanh (1) - \frac{1}{m}}{(e + e^{-1})^2}
+    \\
+    &amp;\gtrsim
+    m,
+\end{aligned}</span> where the second inequality is a consequence of the triangle inequality. Thus, on this interval, we have that <span class="math display">\begin{aligned}
+    \left\lvert \partial_p \varphi(p; X) \right\rvert
+    =
+    \frac{8m\left\lvert
+    X + m \cdot \tanh(mX)
+     \right\rvert}{(e^{mX} + e^{-mX})^2}
+    \gtrsim m^2.
+\end{aligned}</span> Hence, we obtain that <span class="math display">\begin{aligned}
+    \mathbb E\left[ \left( \partial_p \varphi(p; X) \right)^2 \right]
+    &amp;=
+    \mathbb E\left[
+    \left\lvert \partial_p \varphi(p; X) \right\rvert^2
+    \right]
+    \\
+    &amp;\geq
+    \mathbb E\left[
+    \left\lvert \partial_p \varphi(p; X) \right\rvert^2
+    \mathbf 1_{\left\lvert X \right\rvert\in [\frac{1}{2m}, \frac{1}{m}]}
+    \right]
+    \\
+    &amp;\gtrsim
+    \mathbb E\left[
+    m^4
+    \mathbf 1_{\left\lvert X \right\rvert\leq [\frac{1}{2m}, \frac{1}{m}]}
+    \right]
+    \\
+    &amp;\gtrsim
+    m^4 e^{-\frac{1}{2}m^2}.
+\end{aligned}</span>
+</details>
+<details>
+<summary>
+<strong>Upper bound on denominator</strong>.
+</summary>
+First, using the work above, we have that <span class="math display">\begin{aligned}
+    \left\lvert \partial_p \varphi(p; X) \right\rvert
+    &amp;=
+    \frac{8m}{(e^{mX} + e^{-mX})^2}
+    \cdot
+    \left\lvert
+    X + m \cdot \tanh(mX)
+     \right\rvert
+    \\
+    &amp;\leq
+    \frac{8m}{(e^{mX} + e^{-mX})^2}
+    \cdot
+    \left(
+    \left\lvert
+    X
+     \right\rvert + m
+    \right),
+\end{aligned}</span> by the triangle inequality. On the other hand, using <a href="#sec-derivatives">Section&nbsp;3.1</a>, we compute that <span class="math display">\begin{aligned}
+    \left\lvert \partial_p \log \mu_p (X) \right\rvert
+    &amp;=
+    \left\lvert 2\tanh(mX) \right\rvert
+    \leq
+    2.
+\end{aligned}</span> Hence, we find that <span class="math display">\begin{aligned}
+    \mathbb E\left[ (\partial_p \varphi(p; X)) (\partial_p \log \mu_p (X)) \right]
+    &amp;\leq
+    \mathbb E\left[ \left\lvert \partial_p \varphi(p; X) \right\rvert \left\lvert \partial_p \log \mu_p (X) \right\rvert \right]
+    \\
+    &amp;\leq
+    2
+    \mathbb E\left[ \left\lvert \partial_p \varphi(p; X) \right\rvert \right]
+    \\
+    &amp;\lesssim
+    \mathbb E\left[
+    \frac{m}{(e^{mX} + e^{-mX})^2}
+    \cdot
+    \left(
+    \left\lvert
+    X
+     \right\rvert + m
+    \right)
+    \right]
+    \\
+    &amp;\lesssim
+    m
+    \int_{0}^{\infty}
+    \frac{x + m}{(e^{mx} + e^{-mx})^2}
+    \cdot
+    e^{-\frac{1}{2}(x - m)^2}
+    \,\mathrm{d}{x}
+    \\
+    &amp;\leq
+    m
+    \int_{0}^{\infty}
+    \left(
+    x
+    + m
+    \right)
+    e^{-\frac{1}{2}(x - m)^2-2mx}
+    \,\mathrm{d}{x}
+    \\
+    &amp;\lesssim
+    me^{-\frac{1}{2}m^2},
+\end{aligned}</span> where the last equality is a consequence of Mills’ inequality (a tail bound on the Gaussian CDF).
+</details>
+<p>Combining the upper and lower bounds, we find that the asymptotic variance of the score matching estimator is <span class="math display">\begin{aligned}
+    \frac{\mathbb E\left[ \left( \partial_p \varphi(p; Y, Z) \right)^2 \right]}{\mathbb E\left[ \partial_p^2 \varphi(p; Y, Z) \right]^2}
+    &amp;\gtrsim
+    \frac{m^4 e^{-\frac{1}{2}m^2}}{\left( me^{-\frac{1}{2}m^2} \right)^2}
+    \gtrsim
+    m^2 e^{\frac{1}{2}m^2}.
+\end{aligned}</span> This shows that the asymptotic variance grows as <span class="math inline">\Omega\left( m^2 e^{\frac{1}{2}m^2} \right)</span>, proving our desired result. Note that this is unbounded as a function of <span class="math inline">m</span>!</p>
+<p>On the other hand, let <span class="math inline">\ell(p; X) \overset{\mathrm{def}}{=}\log \mu_p(X)</span>, and let <span class="math inline">\ell'(p; X) \overset{\mathrm{def}}{=}\partial_p \ell(p; X)</span>. It is well-known that <span class="math display">\begin{aligned}
+    \sqrt{n}(\hat p_{\text{MLE}} - p^\star)
+    \overset{\text{D}}{\to}
+    \mathcal N\left( 0, \frac{1}{\mathbb E[\ell'(p^\star; X)^2]} \right).
+\end{aligned}</span> Meanwhile, we compute that <span class="math display">\begin{aligned}
+\mathbb{E}[\ell'(p^\star; X)^2] &amp;= \int \frac{(\mu_+(X) - \mu_-(X))^2}{\mu_p(X)}
+\\
+&amp;=
+2\int \frac{(\mu_+(X) - \mu_-(X))^2}{\mu_+(X) + \mu_-(X)}\\
+&amp;=
+2\left(
+\int \frac{(\mu_+(X) + \mu_-(X))^2 - 4 \mu_+(X)\mu_-(X)}{\mu_+(X) + \mu_-(X)}
+\right)  \\
+&amp;\geq
+4\left( 1-2\int \frac{\mu_+(X)\mu_-(X)}{\mu_+(X)+\mu_-(X)} \right) \\
+&amp;\geq
+4\left( 1-\int_+ \frac{\mu_+(X)\mu_-(X)}{\mu_+(X)} - \int_- \frac{\mu_+(X)\mu_-(X)}{\mu_-(X)} \right) \\
+&amp;\geq
+4\left( 1-2\mathbb{P}(X \geq m) \right) \\
+&amp;\geq
+4\left( 1 - \frac{1}{\sqrt{1 + m^2}}\exp\left( -\frac{m^2}{2} \right)  \right),
+\end{aligned}</span> where we have used Mills’ inequality to lower bound the Gaussian CDF. Hence, we obtain that the rescaled asymptotic variance of the MLE is bounded by <span class="math display">\begin{aligned}
+    \sigma^2_{\text{MLE}}(m)
+    &amp;= \frac{1}{\mathbb E[\ell'(p^\star; X)^2]} \leq
+    \frac{1}{
+    4\left( 1 - \frac{e^{-\frac{1}{2}m^2}}{\sqrt{1+m^2}}  \right)
+    },
+\end{aligned}</span> as desired.</p>
+<p>Having shown both claims in the theorem, we conclude our proof.&nbsp;◻</p>
+</div>
+</section>
+</section>
+<section id="appendix" class="level1">
+<h1>Appendix</h1>
+<section id="sec-derivatives" class="level2">
+<h2 class="anchored" data-anchor-id="sec-derivatives">Computation of score function derivatives</h2>
+<section id="general-case" class="level3">
+<h3 class="anchored" data-anchor-id="general-case">General case</h3>
+<p>First, we note that <span class="math display">\begin{aligned}
+    \nabla \log \mu_p
+    = \frac{\nabla \mu_p}{\mu_p}
+    = \frac{p \nabla \mu_+ + (1 - p) \nabla \mu_-}{p \mu_+ + (1 - p) \mu_-}\,.
+    \nonumber
+\end{aligned}</span> From this, we can compute the partial derivatives of the log-likelihood and score function with respect to <span class="math inline">p</span>: <span class="math display">\begin{aligned}
+    \partial_p \log \mu_p
+    &amp;=
+    2\frac{\mu_+ - \mu_-}{\mu_+ + \mu_-}
+    \nonumber
+    \\
+    \partial_p \nabla \log \mu_p
+    &amp;=
+    \frac{\mu_p(\nabla \mu_+ - \nabla \mu_-) - (\nabla \mu_p)(\mu_+ - \mu_-)}{\mu_p^2}
+    \nonumber
+    % \\
+    % \partial_p^2 \nabla \log \mu_p
+    % &amp;=
+    % -2\frac{(\mu_+ - \mu_-)(\mu_p(\nabla \mu_+ - \nabla \mu_-) - (\nabla \mu_p)(\mu_+ - \mu_-))}{\mu_p^3}\,.
+    % \nonumber
+\end{aligned}</span></p>
+</section>
+<section id="special-case-p-frac12" class="level3">
+<h3 class="anchored" data-anchor-id="special-case-p-frac12">Special case <span class="math inline">p = \frac{1}{2}</span></h3>
+<p>Specializing these formulas to the case <span class="math inline">p = \frac{1}{2}</span>, we obtain that <span class="math display">\begin{aligned}
+    \partial_p \log \mu_p\,\big\vert_{p = \frac{1}{2}}
+    &amp;=
+    2\frac{\mu_+ - \mu_-}{\mu_+ + \mu_-}
+    \nonumber
+    \\
+    \nabla \log \mu_p \,\big\vert_{p = \frac{1}{2}}
+    &amp;= \frac{\nabla \mu_+ + \nabla \mu_-}{\mu_+ + \mu_-}
+    \nonumber
+    \\
+    \partial_p \nabla \log \mu_p\,\big\vert_{p = \frac{1}{2}}
+    &amp;=
+    4 \left( \frac{\mu_- \nabla \mu_+ - \mu_+ \nabla \mu_-}{(\mu_+ + \mu_-)^2} \right)
+    \nonumber
+    % \\
+    % \partial_p^2 \nabla \log \mu_p\eval_{p = \half}
+    % &amp;=
+    % -16 \frac{(\mu_+ - \mu_-)(\mu_-\nabla \mu_+ - \mu_+ \nabla \mu_-)}{(\mu_+ + \mu_-)^3}\,.
+    % \nonumber
+\end{aligned}</span> As functions of <span class="math inline">x</span>, we can further simplify these expressions: <span class="math display">\begin{aligned}
+    \partial_p \log \mu_p\,\big\vert_{p = \frac{1}{2}}
+    &amp;=
+    2\frac{e^{mx} - e^{-mx}}{e^{mx} + e^{-mx}}
+    = 2\tanh(mx)
+    \\
+    \nabla \log \mu_p \,\big\vert_{p = \frac{1}{2}}
+    (x)
+    &amp;= -x + m \cdot \frac{e^{mx} - e^{-mx}}{e^{mx} + e^{-mx}}
+    = -x + m \tanh(mx)
+    \\
+    \partial_p \nabla \log \mu_p\,\big\vert_{p = \frac{1}{2}}
+    (x)
+    &amp;=
+    \frac{8m}{(e^{mx} + e^{-mx})^2}.
+\end{aligned}</span> Finally, we can also compute that <span class="math display">\begin{aligned}
+    \partial_p \nabla^2 \log \mu_p\,\big\vert_{p = \frac{1}{2}}
+    (x)
+    &amp;=
+    \nabla
+    \frac{8m}{(e^{mx} + e^{-mx})^2}
+    =
+    -\frac{16m^2}{(e^{mx}+e^{-mx})^2}\cdot \tanh(mx).
+\end{aligned}</span></p>
+
+
+
+</section>
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-hyvarinen05a" class="csl-entry" role="listitem">
+Hyvärinen, Aapo. 2005. <span>“Estimation of Non-Normalized Statistical Models by Score Matching.”</span> <em>Journal of Machine Learning Research</em> 6 (24): 695–709. <a href="http://jmlr.org/papers/v6/hyvarinen05a.html">http://jmlr.org/papers/v6/hyvarinen05a.html</a>.
+</div>
+<div id="ref-koehler2022statistical" class="csl-entry" role="listitem">
+Koehler, Frederic, Alexander Heckett, and Andrej Risteski. 2022. <span>“Statistical Efficiency of Score Matching: The View from Isoperimetry.”</span> <a href="https://arxiv.org/abs/2210.00726">https://arxiv.org/abs/2210.00726</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
