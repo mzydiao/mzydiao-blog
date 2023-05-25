@@ -1,0 +1,187 @@
+%%fakesubsection misc commands
+\newcommand{\Span}{\textrm{span}}
+
+\newcommand{\dd}{\,\mathrm{d}}
+
+%6.437
+\newcommand{\iid}{\overset{\mathrm{i.i.d.}}\sim}
+\newcommand{\di}[2]{\left(#1 \,\Vert\, #2\right)}
+\newcommand{\FIop}{\mathsf{FI}}
+\newcommand{\FI}[2]{\FIop\di{#1}{#2}}
+\newcommand{\KLf}[2]{D_f\di{#1}{#2}}
+\newcommand{\KLop}{\mathsf{KL}}
+\newcommand{\KL}[2]{\KLop\di{#1}{#2}}
+\newcommand{\tKL}[2]{\tilde \KLop\di{#1}{#2}}
+\newcommand{\hKL}[2]{\hat \KLop\di{#1}{#2}}
+\newcommand{\indep}{\perp \!\!\! \perp}
+\newcommand{\midd}{\,\middle\vert\,}
+
+%vert
+\newcommand{\mvert}{\,\bigg\vert\,}
+\newcommand\bbm\mathbf
+\newcommand{\eval}{\,\big\vert}
+
+\setmathsfont(Digits){Palatino}
+%common
+\newcommand{\cbrt}[1]{\sqrt[3]{#1}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\mailto}[1]{\href{mailto:#1}{\texttt{#1}}}
+\newcommand{\ol}{\overline}
+\newcommand{\ul}{\underline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\eps}{\varepsilon}
+%\renewcommand{\iff}{\Leftrightarrow}
+%\renewcommand{\implies}{\Rightarrow}
+% \newcommand{\vocab}[1]{{\bfseries\color{blue}#1}}
+\newcommand{\half}{\frac{1}{2}}
+
+%tag
+\newcommand{\ctag}[1]{\tag{{\color{Mulberry}#1}}}
+\newcommand{\ltag}[1]{\tag{{\color{Emerald}#1}}}
+
+%mathbb
+\newcommand{\bbA}{\mathbb A}
+\newcommand{\bbB}{\mathbb B}
+\newcommand{\bbC}{\mathbb C}
+\newcommand{\bbD}{\mathbb D}
+\newcommand{\bbE}{\mathbb E}
+\newcommand{\bbF}{\mathbb F}
+\newcommand{\bbG}{\mathbb G}
+\newcommand{\bbH}{\mathbb H}
+\newcommand{\bbI}{\mathbb I}
+\newcommand{\bbJ}{\mathbb J}
+\newcommand{\bbK}{\mathbb K}
+\newcommand{\bbL}{\mathbb L}
+\newcommand{\bbM}{\mathbb M}
+\newcommand{\bbN}{\mathbb N}
+\newcommand{\bbO}{\mathbb O}
+\newcommand{\bbP}{\mathbb P}
+\newcommand{\bbQ}{\mathbb Q}
+\newcommand{\bbR}{\mathbb R}
+\newcommand{\bbS}{\mathbb S}
+\newcommand{\bbT}{\mathbb T}
+\newcommand{\bbU}{\mathbb U}
+\newcommand{\bbV}{\mathbb V}
+\newcommand{\bbW}{\mathbb W}
+\newcommand{\bbX}{\mathbb X}
+\newcommand{\bbY}{\mathbb Y}
+\newcommand{\bbZ}{\mathbb Z}
+
+
+%mathcal
+\newcommand{\mA}{\mathcal A}
+\newcommand{\mB}{\mathcal B}
+\newcommand{\mC}{\mathcal C}
+\newcommand{\mD}{\mathcal D}
+\newcommand{\mE}{\mathcal E}
+\newcommand{\mF}{\mathcal F}
+\newcommand{\mG}{\mathcal G}
+\newcommand{\mH}{\mathcal H}
+\newcommand{\mI}{\mathcal I}
+\newcommand{\mJ}{\mathcal J}
+\newcommand{\mK}{\mathcal K}
+\newcommand{\mL}{\mathcal L}
+\newcommand{\mM}{\mathcal M}
+\newcommand{\mN}{\mathcal N}
+\newcommand{\mO}{\mathcal O}
+\newcommand{\mP}{\mathcal P}
+\newcommand{\mQ}{\mathcal Q}
+\newcommand{\mR}{\mathcal R}
+\newcommand{\mS}{\mathcal S}
+\newcommand{\mT}{\mathcal T}
+\newcommand{\mU}{\mathcal U}
+\newcommand{\mV}{\mathcal V}
+\newcommand{\mW}{\mathcal W}
+\newcommand{\mX}{\mathcal X}
+\newcommand{\mY}{\mathcal Y}
+\newcommand{\mZ}{\mathcal Z}
+
+%%fakesubsection own math
+
+\DeclareMathOperator{\epi}{epi} % epigraph
+\DeclareMathOperator{\relint}{relint} % relative interior
+\DeclareMathOperator{\interior}{int} % relative interior
+
+%%fakesubsection evan's
+
+%More commands and math operators
+\DeclareMathOperator{\cis}{cis}
+\DeclareMathOperator*{\lcm}{lcm}
+\DeclareMathOperator*{\argmin}{arg min}
+\DeclareMathOperator*{\argmax}{arg max}
+
+%Inequalities
+\newcommand{\cycsum}{\sum_{\mathrm{cyc}}}
+\newcommand{\symsum}{\sum_{\mathrm{sym}}}
+\newcommand{\cycprod}{\prod_{\mathrm{cyc}}}
+\newcommand{\symprod}{\prod_{\mathrm{sym}}}
+
+%From H113 "Introduction to Abstract Algebra" at UC Berkeley
+\newcommand{\CC}{\mathbb C}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\EE}{\mathbb E}
+\newcommand{\charin}{\text{ char }}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Inn}{Inn}
+\DeclareMathOperator{\Syl}{Syl}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\GL}{GL} % General linear group
+% \DeclareMathOperator{\SL}{SL} % Special linear group
+
+%From Kiran Kedlaya's "Geometry Unbound"
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+%From M275 "Topology" at SJSU
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\taking}[1]{\xrightarrow{#1}}
+\newcommand{\inv}{^{-1}}
+
+%From M170 "Introduction to Graph Theory" at SJSU
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\ord}{ord}
+\newcommand{\defeq}{\overset{\mathrm{def}}{=}}
+
+%From the USAMO .tex filse
+\newcommand{\ii}{\item}
+
+% From Math 55 and Math 145 at Harvard
+\DeclareMathOperator{\Ker}{Ker} % Kernel
+\DeclareMathOperator{\im}{im} % image
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Spec}{Spec} % spectrum
+\DeclareMathOperator{\Tr}{Tr} % trace
+\DeclareMathOperator{\clip}{clip} % clip
+\DeclareMathOperator{\pr}{pr} % projection
+\DeclareMathOperator{\proj}{proj} % projection
+\DeclareMathOperator{\ext}{ext} % extension
+\DeclareMathOperator{\pred}{pred} % predecessor
+\DeclareMathOperator{\dom}{dom} % domain
+\DeclareMathOperator{\ran}{ran} % range
+\DeclareMathOperator{\supp}{supp} % support
+\DeclareMathOperator{\Var}{Var} % variance
+\DeclareMathOperator{\Cov}{Cov} % covariance
+\DeclareMathOperator{\Div}{div} % divergence
+\DeclareMathOperator{\Tan}{Tan} % tangent space
+\DeclareMathOperator{\diag}{diag} % diagonal
+\DeclareMathOperator{\prox}{prox} % proximal operator 
+
+% More script letters etc.
+\newcommand{\SA}{\mathscr A}
+\newcommand{\SB}{\mathscr B}
+\newcommand{\SC}{\mathscr C}
+\newcommand{\SD}{\mathscr D}
+\newcommand{\SE}{\mathscr E}
+\newcommand{\SF}{\mathscr F}
+\renewcommand{\SL}{\mathscr L}
+\newcommand{\SG}{\mathscr G}
+\newcommand{\SH}{\mathscr H}
+\newcommand{\OO}{\mathcal O}

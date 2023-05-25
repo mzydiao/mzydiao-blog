@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Michael Diao's Blog"
+  navbar:
+    pinned: true
+    collapse-below: lg
+    right:
+      - text: "About"
+        href: about.qmd
+      - text: "Blog"
+        href: index.qmd
+format:
+  html:
+    html-math-method: katex
+    theme:
+      - cosmo
+      - custom.scss
+    css: styles.css
+
+
+
