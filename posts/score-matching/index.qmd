@@ -234,6 +234,9 @@ only vary significantly on a set of negligible measure.
 ```{python}
 #| label: fig-score
 #| fig-cap: "The score function varies negligibly with $p$ outside a set of extremely small measure. Hence, learning $p$ via score matching should be extremely sample inefficient."
+#| fig-width: 1 # Width for figures in inches
+#| fig-height: 61 # Height for figures in inches
+#| fig-format: "svg"
 import numpy as np
 import matplotlib.pyplot as plt
 import warnings

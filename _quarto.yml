@@ -9,10 +9,12 @@ website:
     collapse-below: lg
     right:
       - text: "About"
-        href: about.qmd
-      - text: "Blog"
         href: index.qmd
+      - text: "Blog"
+        href: blog.qmd
   google-analytics: G-Y9Q6Z3H9NW
+  site-url: "https://www.mzydiao.com"
+  site-path: "/"
 format:
   html:
     html-math-method: katex

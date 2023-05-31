@@ -4,5 +4,11 @@
     "items": [
       "/posts/score-matching/index.html"
     ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/score-matching/index.html"
+    ]
   }
 ]
