@@ -44,15 +44,15 @@
   {
     "objectID": "index.html",
     "href": "index.html",
+    "title": "Michael Ziyang Diao (刁子阳)",
+    "section": "",
+    "text": "Hi, I’m Michael! :)\nI graduated from MIT in 2023 with an M.Eng. in Computer Science and a B.S. in Electrical Engineering & Computer Science and Mathematics. I hope to use this site as a space to collect and share cool ideas I’ve stumbled across. Hopefully they interest you as well!"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
     "title": "Blog Posts",
     "section": "",
     "text": "Challenges of Score Matching\n\n\n\n\n\n\n\nmath\n\n\nstatistics\n\n\nmachine learning\n\n\n\n\nWe motivate score matching as an alternative to maximum likelihood estimation, and consider its advantages and shortcomings.\n\n\n\n\n\n\nMay 25, 2023\n\n\nMichael Diao\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Michael Ziyang Diao (刁子阳)",
-    "section": "",
-    "text": "Hi, I’m Michael! :)\nI graduated from MIT in 2023 with an M.Eng. in Computer Science and a B.S. in Electrical Engineering & Computer Science and Mathematics.  I hope to use this site as a space to collect and share cool ideas I’ve stumbled across. Hopefully they interest you as well!"
   }
 ]
