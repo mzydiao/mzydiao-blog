@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.mzydiao.com/research/thesis/index.html</loc>
+    <lastmod>2023-08-02T21:27:22.525Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.mzydiao.com/research/fbgvi/index.html</loc>
+    <lastmod>2023-08-02T21:27:22.975Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.mzydiao.com/research.html</loc>
+    <lastmod>2023-08-02T21:27:23.409Z</lastmod>
+  </url>
+  <url>
     <loc>https://www.mzydiao.com/posts/score-matching/index.html</loc>
-    <lastmod>2023-05-31T03:35:43.589Z</lastmod>
+    <lastmod>2023-08-02T21:27:24.671Z</lastmod>
   </url>
   <url>
     <loc>https://www.mzydiao.com/index.html</loc>
-    <lastmod>2023-05-31T03:35:43.871Z</lastmod>
+    <lastmod>2023-08-02T21:27:24.976Z</lastmod>
   </url>
   <url>
     <loc>https://www.mzydiao.com/blog.html</loc>
-    <lastmod>2023-05-31T03:35:44.264Z</lastmod>
+    <lastmod>2023-08-02T21:27:25.345Z</lastmod>
   </url>
 </urlset>
