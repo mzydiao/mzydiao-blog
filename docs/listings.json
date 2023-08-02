@@ -1,14 +1,15 @@
 [
   {
-    "listing": "/index.html",
+    "listing": "/blog.html",
     "items": [
       "/posts/score-matching/index.html"
     ]
   },
   {
-    "listing": "/blog.html",
+    "listing": "/research.html",
     "items": [
-      "/posts/score-matching/index.html"
+      "/research/fbgvi/index.html",
+      "/research/thesis/index.html"
     ]
   }
 ]

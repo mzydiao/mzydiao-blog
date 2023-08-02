@@ -18,6 +18,6 @@ about:
 
 Hi, I'm Michael! :)
 
-I graduated from MIT in 2023 with an M.Eng. in Computer Science and a B.S. in Electrical Engineering & Computer Science and Mathematics.
-I hope to use this site as a space to collect and share cool ideas I've stumbled across.
+I graduated from MIT in 2023 with an M.Eng. in Computer Science (see my [thesis](/research/thesis/index.qmd)!) and a B.S. in Electrical Engineering & Computer Science and Mathematics.
+I hope to use this site as a space to collect and share [cool ideas](/blog.qmd) I've stumbled across.
 Hopefully they interest you as well!

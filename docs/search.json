@@ -46,14 +46,7 @@
     "href": "index.html",
     "title": "Michael Ziyang Diao (刁子阳)",
     "section": "",
-    "text": "Hi, I’m Michael! :)\nI graduated from MIT in 2023 with an M.Eng. in Computer Science and a B.S. in Electrical Engineering & Computer Science and Mathematics. I hope to use this site as a space to collect and share cool ideas I’ve stumbled across. Hopefully they interest you as well!"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Michael Ziyang Diao (刁子阳)",
-    "section": "",
-    "text": "Hi, I’m Michael! :)\nI graduated from MIT in 2023 with an M.Eng. in Computer Science and a B.S. in Electrical Engineering & Computer Science and Mathematics.  I hope to use this site as a space to collect and share cool ideas I’ve stumbled across. Hopefully they interest you as well!"
+    "text": "Hi, I’m Michael! :)\nI graduated from MIT in 2023 with an M.Eng. in Computer Science (see my thesis!) and a B.S. in Electrical Engineering & Computer Science and Mathematics. I hope to use this site as a space to collect and share cool ideas I’ve stumbled across. Hopefully they interest you as well!"
   },
   {
     "objectID": "blog.html",
@@ -61,5 +54,26 @@
     "title": "Blog Posts",
     "section": "",
     "text": "Challenges of Score Matching\n\n\n\n\n\n\n\nmath\n\n\nstatistics\n\n\nmachine learning\n\n\n\n\nWe motivate score matching as an alternative to maximum likelihood estimation, and consider its advantages and shortcomings.\n\n\n\n\n\n\nMay 25, 2023\n\n\nMichael Diao\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "research.html",
+    "href": "research.html",
+    "title": "Research",
+    "section": "",
+    "text": "Forward-Backward Gaussian Variational Inference via JKO in the Bures-Wasserstein Space\n\n\n\n\n\n\n\npapers\n\n\nICML\n\n\n\n\nWe devise a novel algorithm for Gaussian variational inference that comes with state-of-the-art convergence guarantees.\n\n\n\n\n\n\nJul 23, 2023\n\n\nMichael Diao\n\n\n\n\n\n\n  \n\n\n\n\nProximal Gradient Algorithms for Gaussian Variational Inference: Optimization in the Bures–Wasserstein Space\n\n\n\n\n\n\n\nthesis\n\n\n\n\nMy MEng thesis. Translates the machinery of Euclidean optimization to the Bures-Wasserstein space to develop state-of-the-art algorithms for Gaussian variational inference.\n\n\n\n\n\n\nMay 12, 2023\n\n\nMichael Diao\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "research/fbgvi/index.html",
+    "href": "research/fbgvi/index.html",
+    "title": "Forward-Backward Gaussian Variational Inference via JKO in the Bures-Wasserstein Space",
+    "section": "",
+    "text": "Links\nPublished at ICML 2023.\nFor a quick overview, check out our ICML poster and video.\nAnd for more detail, see our arXiv preprint (2023) and our ICML paper (2023). :)\n\n\n\n\n\nReferences\n\nDiao, Michael Ziyang, Krishna Balasubramanian, Sinho Chewi, and Adil Salim. 2023. “Forward-Backward Gaussian Variational Inference via JKO in the Bures-Wasserstein Space.” In Proceedings of the 40th International Conference on Machine Learning, edited by Andreas Krause, Emma Brunskill, Kyunghyun Cho, Barbara Engelhardt, Sivan Sabato, and Jonathan Scarlett, 202:7960–91. Proceedings of Machine Learning Research. PMLR. https://proceedings.mlr.press/v202/diao23a.html.\n\n\nDiao, Michael, Krishnakumar Balasubramanian, Sinho Chewi, and Adil Salim. 2023. “Forward-Backward Gaussian Variational Inference via JKO in the Bures-Wasserstein Space.” https://arxiv.org/abs/2304.05398."
+  },
+  {
+    "objectID": "research/thesis/index.html",
+    "href": "research/thesis/index.html",
+    "title": "Proximal Gradient Algorithms for Gaussian Variational Inference: Optimization in the Bures–Wasserstein Space",
+    "section": "",
+    "text": "Links\nSee my thesis on MIT DSpace (2023).\n\n\n\nThesis cover page\n\n\nThe work done in this thesis was published at ICML 2023 (2023).\n\n\n\n\n\nReferences\n\nDiao, Michael Ziyang. 2023. “Proximal Gradient Algorithms for Gaussian Variational Inference: Optimization in the Bures–Wasserstein Space.” Master’s thesis, Massachusetts Institute of Technology.\n\n\nDiao, Michael Ziyang, Krishna Balasubramanian, Sinho Chewi, and Adil Salim. 2023. “Forward-Backward Gaussian Variational Inference via JKO in the Bures-Wasserstein Space.” In Proceedings of the 40th International Conference on Machine Learning, 202:7960–91. Proceedings of Machine Learning Research. PMLR. https://proceedings.mlr.press/v202/diao23a.html."
   }
 ]

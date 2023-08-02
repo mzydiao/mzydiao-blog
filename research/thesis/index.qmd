@@ -1,0 +1,24 @@
+---
+title: "Proximal Gradient Algorithms for Gaussian Variational Inference: Optimization in the Bures–Wasserstein Space"
+author: "Michael Diao"
+date: "2023-05-12"
+categories: [thesis]
+description: "My MEng thesis. Translates the machinery of Euclidean optimization to the Bures-Wasserstein space to develop state-of-the-art algorithms for Gaussian variational inference."
+abstract: Variational inference (VI) seeks to approximate a target distribution $\pi$ by an element of a tractable family of distributions. Of key interest in statistics and machine learning is Gaussian VI, which approximates $\pi$ by minimizing the Kullback-Leibler (KL) divergence to $\pi$ over the space of Gaussians. In this work, we develop the (Stochastic) Forward-Backward Gaussian Variational Inference (FB-GVI) algorithm to solve Gaussian VI. Our approach exploits the composite structure of the KL divergence, which can be written as the sum of a smooth term (the potential) and a non-smooth term (the entropy) over the Bures-Wasserstein (BW) space of Gaussians endowed with the Wasserstein distance. For our proposed algorithm, we obtain state-of-the-art convergence guarantees when $\pi$ is log-smooth and log-concave, as well as the first convergence guarantees to first-order stationary solutions when $\pi$ is only log-smooth. Additionally, in the setting where the potential admits a representation as the average of many smooth component functionals, we develop and analyze a variance-reduced extension to (Stochastic) FB–GVI with improved complexity guarantees.
+bibliography: refs.bib
+image: gaussian.png
+---
+
+::: {.content-hidden}
+$$
+{{< include ../../_macros.tex >}}
+$$
+:::
+
+# Links
+
+See my thesis on [MIT DSpace](https://dspace.mit.edu/handle/1721.1/151664) [-@diao2023thesis].
+
+![Thesis cover page](thesis.jpg)
+
+The work done in this thesis was published at [ICML 2023](https://proceedings.mlr.press/v202/diao23a.html) [-@pmlr-v202-diao23a].

@@ -1,1 +1,1 @@
-Sitemap: https://mzydiao.github.io/mzydiao-blog/sitemap.xml
+Sitemap: https://www.mzydiao.com/sitemap.xml

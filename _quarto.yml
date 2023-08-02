@@ -12,6 +12,8 @@ website:
         href: index.qmd
       - text: "Blog"
         href: blog.qmd
+      - text: "Research"
+        href: research.qmd
   google-analytics: G-Y9Q6Z3H9NW
   site-url: "https://www.mzydiao.com"
   site-path: "/"
